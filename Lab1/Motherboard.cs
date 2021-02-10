@@ -17,32 +17,48 @@ namespace Lab1
             MemoryCardTypesSupported = new List<string>();
             ProcessorTypesSupported = new List<string>();
         }
-        public static bool FormMotherboard(Motherboard m, List<Processor> processors
-            //, List<MemoryCard> cards
-            )
+        public static bool FormMotherboard(Motherboard m, List<Processor> processors, List<MemoryCard> cards)
         {
-            //var processorsList = processors.Select(p => p.Type);
-            //var inters = m.ProcessorTypesSupported.Intersect(processorsList);
-            var inter = processors
+            if (AddProcessorsToMotherboard(m, processors) && AddMemoryCardsToMotherBoard(m, cards))
+                return true;
+            return false;
+        }
+        //????
+        public static bool AddProcessorsToMotherboard(Motherboard m, List<Processor> processors)
+        {
+            var intersection = processors
                 .Select(p => p.Type)
                 .Where(pr => m.ProcessorTypesSupported
-                    .Any(i => pr == i));
+                    .Any(ts => pr == ts));
+            
+            if(processors.Count == intersection.Count())
+                return true;
+            return false;
+        }
 
-            foreach (var s in m.ProcessorTypesSupported)
-                Console.WriteLine(s);
-
-            //foreach (var s in processorsList)
-            //    Console.WriteLine(s);
-            //Console.WriteLine("intersection");
-
-            //foreach (var s in inter)
-            //    Console.WriteLine(s);
-            Console.WriteLine("linq");
-            foreach (var s in inter)
-                Console.WriteLine(s);
-
-            return true;
+        public static bool AddProcessorsToMotherboard(Motherboard m, Processor processor)
+        {
+            if (m.ProcessorTypesSupported.Contains(processor.Type))
+                return true;
+            return false;
+        }
+        //???
+        public static bool AddMemoryCardsToMotherBoard(Motherboard m, List<MemoryCard> cards)
+        {
+            var intersection = cards.Select(c => c.Type)
+                .Where(ct => m.MemoryCardTypesSupported
+                    .Any(cts => ct == cts));
+            if (cards.Count == intersection.Count())
+                return true;
+            return false;
 
         }
+        public static bool AddMemoryCardsToMotherBoard(Motherboard m, MemoryCard card)
+        {
+            if (m.MemoryCardTypesSupported.Contains(card.Type))
+                return true;
+            return false;
+        }
+        
     }
 }
