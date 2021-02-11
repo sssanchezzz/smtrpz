@@ -11,7 +11,7 @@ namespace Lab1
         public Dimensions PowerSupplyDimensions { get; set; }
         public PowerSupply PowerSupply { get; set; }
         public Motherboard MotherboardAdded { get; set; }
-        
+
         public SystemUnitCase()
         {
             MotherboardTypesSupported = new List<MotherboardTypes>();
@@ -32,7 +32,6 @@ namespace Lab1
         }
 
 
-
         public bool AddPowerSupplyBool(PowerSupply supply)
         {
             if (supply.Dimensions.Width <= PowerSupplyDimensions.Width
@@ -41,14 +40,29 @@ namespace Lab1
             {
                 return true;
             }
+
             return false;
         }
 
-      
+        public bool CheckPowerConsumption()
+        {
+            if (MotherboardAdded != null && MotherboardAdded.Processor != null && PowerSupply != null &&
+                MotherboardAdded.MemoryCards != null && MotherboardAdded.MemoryCards.Count != 0)
+            {
+                int sum = 0;
+                foreach (var c in MotherboardAdded.MemoryCards)
+                {
+                    sum += c.PowerConsumption;
+                }
 
-        
+                sum += MotherboardAdded.PowerConsumption + MotherboardAdded.Processor.PowerConsumption;
 
-
-
+                return (sum <= PowerSupply.Power);
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

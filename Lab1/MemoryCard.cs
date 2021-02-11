@@ -5,6 +5,7 @@ namespace Lab1
     {
         public int MemoryCapacity { get; set; }
         public MemoryCardTypes Type { get; set; }
+        public int PowerConsumption { get; set; }
 
 
         public MemoryCard()

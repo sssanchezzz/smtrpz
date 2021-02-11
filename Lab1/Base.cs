@@ -18,7 +18,7 @@ namespace Lab1
         }
         public override string ToString()
         {
-            return $"Name: {Name}, Model: {Model}";
+            return $"Name: {Name}, Model: {Model}, Price: {Price}";
         }
 
     }

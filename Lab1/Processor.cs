@@ -9,6 +9,7 @@ namespace Lab1
         public int NumberOfCores;
         public int PowerConsumption;
         public string Architecture;
+        
 
         public Processor()
         {

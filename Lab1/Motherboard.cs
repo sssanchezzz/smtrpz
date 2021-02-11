@@ -11,12 +11,14 @@ namespace Lab1
         public List<MemoryCardTypes> MemoryCardTypesSupported { get; }
         public MotherboardTypes Type { get; set; }
         public Processor Processor { get; set; }
-        public List<MemoryCard> MemoryCards { get; set; }
+        public List<MemoryCard> MemoryCards { get; }
+        public int PowerConsumption { get; set; }
 
         public Motherboard()
         {
             MemoryCardTypesSupported = new List<MemoryCardTypes>();
             ProcessorTypesSupported = new List<ProcessorTypes>();
+            MemoryCards = new List<MemoryCard>();
         }
 
         public bool FormMotherboard(List<Processor> processors, List<MemoryCard> cards)

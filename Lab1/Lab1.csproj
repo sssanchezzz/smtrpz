@@ -44,7 +44,6 @@
     <Compile Include="PowerSupply.cs" />
     <Compile Include="Dimensions.cs" />
     <Compile Include="Base.cs" />
-    <Compile Include="Check.cs" />
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
