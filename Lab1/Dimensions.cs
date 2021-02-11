@@ -10,5 +10,12 @@ namespace Lab1
         public Dimensions()
         {
         }
+
+        public Dimensions(int length, int width, int height)
+        {
+            Length = length;
+            Width = width;
+            Height = height;
+        }
     }
 }

@@ -7,58 +7,55 @@ namespace Lab1
 {
     public class Motherboard : Base<Motherboard>
     {
-        public List<string> ProcessorTypesSupported { get; }
-        public List<string> MemoryCardTypesSupported { get; }
-        public string Type { get; set; }
-
+        public List<ProcessorTypes> ProcessorTypesSupported { get; }
+        public List<MemoryCardTypes> MemoryCardTypesSupported { get; }
+        public MotherboardTypes Type { get; set; }
+        public Processor Processor { get; set; }
+        public List<MemoryCard> MemoryCards { get; set; }
 
         public Motherboard()
         {
-            MemoryCardTypesSupported = new List<string>();
-            ProcessorTypesSupported = new List<string>();
+            MemoryCardTypesSupported = new List<MemoryCardTypes>();
+            ProcessorTypesSupported = new List<ProcessorTypes>();
         }
-        public static bool FormMotherboard(Motherboard m, List<Processor> processors, List<MemoryCard> cards)
+
+        public bool FormMotherboard(List<Processor> processors, List<MemoryCard> cards)
         {
-            if (AddProcessorsToMotherboard(m, processors) && AddMemoryCardsToMotherBoard(m, cards))
-                return true;
-            return false;
+            return (AddProcessorsToMotherboard(processors) && AddMemoryCardsToMotherBoard(cards));
         }
+
         //????
-        public static bool AddProcessorsToMotherboard(Motherboard m, List<Processor> processors)
+        public bool AddProcessorsToMotherboard(List<Processor> processors)
         {
             var intersection = processors
                 .Select(p => p.Type)
-                .Where(pr => m.ProcessorTypesSupported
+                .Where(pr => ProcessorTypesSupported
                     .Any(ts => pr == ts));
-            
-            if(processors.Count == intersection.Count())
+
+            if (processors.Count == intersection.Count())
                 return true;
             return false;
         }
 
-        public static bool AddProcessorsToMotherboard(Motherboard m, Processor processor)
+        public bool AddProcessorsToMotherboard(Processor processor)
         {
-            if (m.ProcessorTypesSupported.Contains(processor.Type))
-                return true;
-            return false;
+            return ProcessorTypesSupported.Contains(processor.Type);
         }
+
         //???
-        public static bool AddMemoryCardsToMotherBoard(Motherboard m, List<MemoryCard> cards)
+        public bool AddMemoryCardsToMotherBoard(List<MemoryCard> cards)
         {
             var intersection = cards.Select(c => c.Type)
-                .Where(ct => m.MemoryCardTypesSupported
+                .Where(ct => MemoryCardTypesSupported
                     .Any(cts => ct == cts));
             if (cards.Count == intersection.Count())
                 return true;
             return false;
+        }
 
-        }
-        public static bool AddMemoryCardsToMotherBoard(Motherboard m, MemoryCard card)
+        public bool AddMemoryCardsToMotherBoard(MemoryCard card)
         {
-            if (m.MemoryCardTypesSupported.Contains(card.Type))
-                return true;
-            return false;
+            return MemoryCardTypesSupported.Contains(card.Type);
         }
-        
     }
 }

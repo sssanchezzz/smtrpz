@@ -7,21 +7,28 @@ namespace Lab1
     //  корпус системного блока
     public class SystemUnitCase : Base<SystemUnitCase>
     {
-        public ArrayList MotherboardTypesSupported { get; }
-
+        public List<MotherboardTypes> MotherboardTypesSupported { get; }
         public Dimensions PowerSupplyDimensions { get; set; }
-        public List<PowerSupply> PowerSupplies { get; }
-
+        public PowerSupply PowerSupply { get; set; }
+        public Motherboard MotherboardAdded { get; set; }
+        
         public SystemUnitCase()
         {
+            MotherboardTypesSupported = new List<MotherboardTypes>();
         }
 
 
         public bool AddMotherboardBool(Motherboard motherboard)
         {
-            if (MotherboardTypesSupported.Contains(motherboard.Type))
-                return true;
-            return false;
+            return (MotherboardTypesSupported.Contains(motherboard.Type));
+        }
+
+        public void AddMotherboard(Motherboard motherboard, bool res)
+        {
+            if (res)
+            {
+                MotherboardAdded = motherboard;
+            }
         }
 
 
@@ -37,14 +44,9 @@ namespace Lab1
             return false;
         }
 
-        public void AddPowerSupply(PowerSupply supply, bool possible)
-        {
-            if (possible)
-            {
-                PowerSupplies.Add(supply);
-            }
+      
 
-        }
+        
 
 
 

@@ -3,10 +3,10 @@ namespace Lab1
 {
     public class Processor : Base<Processor>
     {
-        public string Type;
+        public ProcessorTypes Type;
 
         public int ClockRate;
-        public int Performance;
+        public int NumberOfCores;
         public int PowerConsumption;
         public string Architecture;
 
