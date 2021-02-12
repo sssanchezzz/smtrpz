@@ -6,7 +6,6 @@ namespace Lab1
         public int Length { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
         public Dimensions()
         {
         }

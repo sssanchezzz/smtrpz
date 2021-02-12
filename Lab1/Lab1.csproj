@@ -30,7 +30,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentsSetChecker.cs" />
     <Compile Include="MemoryCardTypes.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="MotherboardTypes.cs" />

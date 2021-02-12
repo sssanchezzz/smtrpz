@@ -9,7 +9,6 @@ namespace Lab1
     {
         public static void Main(string[] args)
         {
-
             TestData data = new TestData();
             Menu.ShowMenu();
         }

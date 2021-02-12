@@ -13,7 +13,7 @@ namespace Lab1
         private static List<bool> res = new List<bool>();
 
         private static SystemUnitCase unit;
-        
+
         public static void ShowMenu()
         {
             Console.WriteLine("Please, choose a system unit case");
@@ -22,45 +22,47 @@ namespace Lab1
                 Console.WriteLine($"{(SystemUnitCase.Items.IndexOf(s) + 1)} - {s}");
             }
 
-            if (int.TryParse(Console.ReadLine(), out int input))
+            bool repeat = true;
+            while (repeat)
             {
-                if (input > 0 && input <= SystemUnitCase.Items.Count)
+                if (int.TryParse(Console.ReadLine(), out int input))
                 {
-                    unit = SystemUnitCase.Items[input - 1];
-
-                    CheckFunction<Motherboard> checkMoth = unit.AddMotherboardBool;
-                    Choose(unit, Motherboard.Items, "motherboard", checkMoth);
-                    CheckFunction<PowerSupply> checkPow = unit.AddPowerSupplyBool;
-                    Choose(unit, PowerSupply.Items, "power", checkPow);
-                    CheckFunction<Processor> checkProc = unit.MotherboardAdded.AddProcessorsToMotherboard;
-                    Choose(unit, Processor.Items, "processor", checkProc);
-                    ChooseMemoryCard(unit);
-                    Conclusion();
+                    if (input > 0 && input <= SystemUnitCase.Items.Count)
+                    {
+                        repeat = false;
+                        unit = SystemUnitCase.Items[input - 1];
+                        CheckFunction<Motherboard> checkMoth = unit.AddMotherboardBool;
+                        Choose(unit, Motherboard.Items, "motherboard", checkMoth);
+                        CheckFunction<PowerSupply> checkPow = unit.AddPowerSupplyBool;
+                        Choose(unit, PowerSupply.Items, "power", checkPow);
+                        CheckFunction<Processor> checkProc = unit.MotherboardAdded.AddProcessorsToMotherboard;
+                        Choose(unit, Processor.Items, "processor", checkProc);
+                        ChooseMemoryCard(unit);
+                        Conclusion();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Number out of range, please try again!");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Wrong number, please try again!");
-                    ShowMenu();
+                    Console.WriteLine("Not a number, please try again!");
                 }
             }
         }
-        
+
         private static void Choose<T>(SystemUnitCase unitCase, List<T> list, string choice, CheckFunction<T> function)
         {
             Console.WriteLine($"Please choose {choice}:\n");
             foreach (var s in list)
             {
-                if (function(s))
-                {
-                    Console.WriteLine($"{(list.IndexOf(s) + 1)} - {s} - fits");
-                }
-                else
-                {
-                    Console.WriteLine($"{list.IndexOf(s) + 1} - {s} - does not fit");
-                }
+                Console.WriteLine(function(s)
+                    ? $"{(list.IndexOf(s) + 1)} - {s} - fits"
+                    : $"{list.IndexOf(s) + 1} - {s} - does not fit");
             }
 
-            Console.WriteLine("\nPlease enter your option:\n");
+            Console.WriteLine("\nPlease enter your option:");
             bool repeat = true;
             while (repeat)
             {
@@ -75,7 +77,7 @@ namespace Lab1
                     }
                     else
                     {
-                        Console.WriteLine("Wrong number, please try again!\n");
+                        Console.WriteLine("Number out of range, please try again!");
                         repeat = true;
                     }
                 }
@@ -89,27 +91,27 @@ namespace Lab1
 
         private static bool SetProp(SystemUnitCase unitCase, string prop, Object obj)
         {
-            bool res;
+            bool result;
             switch (prop)
             {
                 case "motherboard":
-                    unitCase.MotherboardAdded = (Motherboard)obj;
-                    res = true;
+                    unitCase.MotherboardAdded = (Motherboard) obj;
+                    result = true;
                     break;
                 case "power":
-                    unitCase.PowerSupply = (PowerSupply)obj;
-                    res = true;
+                    unitCase.PowerSupply = (PowerSupply) obj;
+                    result = true;
                     break;
                 case "processor":
-                    unitCase.MotherboardAdded.Processor = (Processor)obj;
-                    res = true;
+                    unitCase.MotherboardAdded.Processor = (Processor) obj;
+                    result = true;
                     break;
                 default:
-                    res = false;
+                    result = false;
                     break;
             }
 
-            return res;
+            return result;
         }
 
         private static void ChooseMemoryCard(SystemUnitCase unitCase)
@@ -118,14 +120,9 @@ namespace Lab1
 
             foreach (var s in MemoryCard.Items)
             {
-                if (unitCase.MotherboardAdded.MemoryCardTypesSupported.Contains(s.Type))
-                {
-                    Console.WriteLine($"{(MemoryCard.Items.IndexOf(s) + 1)} - {s} - fits");
-                }
-                else
-                {
-                    Console.WriteLine($"{(MemoryCard.Items.IndexOf(s) + 1)} - {s} - does not fit");
-                }
+                Console.WriteLine(unitCase.MotherboardAdded.AddMemoryCardsToMotherBoard(s)
+                    ? $"{(MemoryCard.Items.IndexOf(s) + 1)} - {s} - fits"
+                    : $"{(MemoryCard.Items.IndexOf(s) + 1)} - {s} - does not fit");
             }
 
             Console.WriteLine("Please enter your options, to exit enter 'exit':\n");
@@ -134,40 +131,42 @@ namespace Lab1
             while (!exit)
             {
                 var inputString = Console.ReadLine();
-
-                if (int.TryParse(inputString, out int input))
+                if (inputString != null)
                 {
-                    if (input > 0 && input <= MemoryCard.Items.Count)
+                    if (int.TryParse(inputString, out int input))
                     {
-                        unitCase.MotherboardAdded.MemoryCards.Add(MemoryCard.Items[input - 1]);
-                        Console.WriteLine($"You`ve chosen {MemoryCard.Items[input - 1]}");
+                        if (input > 0 && input <= MemoryCard.Items.Count)
+                        {
+                            unitCase.MotherboardAdded.MemoryCards.Add(MemoryCard.Items[input - 1]);
+                            Console.WriteLine($"You`ve chosen {MemoryCard.Items[input - 1]}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong number, please try again!\n");
+                            exit = false;
+                        }
+                    }
+                    else if (inputString.Equals("exit"))
+                    {
+                        exit = true;
                     }
                     else
                     {
-                        Console.WriteLine("Wrong number, please try again!\n");
-                        ChooseMemoryCard(unitCase);
+                        Console.WriteLine("Not a number, try again");
                     }
-                }
-                else if (inputString.Equals("exit"))
-                {
-                    exit = true;
-                }
-                else
-                {
-                    Console.WriteLine("Not a number, try again");
-                    ChooseMemoryCard(unitCase);
                 }
             }
         }
 
         private static void Conclusion()
         {
-            Console.WriteLine($"Your set:\n" +
+            Console.WriteLine($"\nYour set:\n" +
                               $"System unit case: {unit};\n" +
                               $"PowerSupply: {unit.PowerSupply}, it {CheckString(unit.AddPowerSupplyBool(unit.PowerSupply))} the unit case;\n" +
                               $"Motherboard: {unit.MotherboardAdded}, it {CheckString(unit.MotherboardTypesSupported.Contains(unit.MotherboardAdded.Type))} the motherboard;\n" +
                               $"Processor: {unit.MotherboardAdded.Processor}, it {CheckString(unit.MotherboardAdded.AddProcessorsToMotherboard(unit.MotherboardAdded.Processor))} the motherboard;\n");
-
+           
+            Console.WriteLine($"Memory card{(unit.MotherboardAdded.MemoryCards.Count == 1 ? "" : "s")}:");
             foreach (var s in unit.MotherboardAdded.MemoryCards)
             {
                 Console.WriteLine(
@@ -193,6 +192,5 @@ namespace Lab1
                 return "does not fit";
             }
         }
-
     }
 }

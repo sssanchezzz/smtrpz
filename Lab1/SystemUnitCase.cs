@@ -17,7 +17,6 @@ namespace Lab1
             MotherboardTypesSupported = new List<MotherboardTypes>();
         }
 
-
         public bool AddMotherboardBool(Motherboard motherboard)
         {
             return (MotherboardTypesSupported.Contains(motherboard.Type));
