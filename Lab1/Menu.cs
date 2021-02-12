@@ -31,14 +31,69 @@ namespace Lab1
                     {
                         repeat = false;
                         unit = SystemUnitCase.Items[input - 1];
-                        CheckFunction<Motherboard> checkMoth = unit.AddMotherboardBool;
-                        Choose(unit, Motherboard.Items, "motherboard", checkMoth);
-                        CheckFunction<PowerSupply> checkPow = unit.AddPowerSupplyBool;
-                        Choose(unit, PowerSupply.Items, "power", checkPow);
-                        CheckFunction<Processor> checkProc = unit.MotherboardAdded.AddProcessorsToMotherboard;
-                        Choose(unit, Processor.Items, "processor", checkProc);
-                        ChooseMemoryCard(unit);
-                        Conclusion();
+                        bool loopmenu = true;
+                        while (loopmenu)
+                        {
+                            Console.WriteLine("Press:\n" +
+                                              "1 - to choose motherboard\n" +
+                                              "2 - to choose power supply\n" +
+                                              "3 - to choose processor\n" +
+                                              "4 - to choose memory card\n" +
+                                              "C - to get conclusion");
+
+                            var inputKey = Console.ReadKey().Key;
+                            switch (inputKey)
+                            {
+                                case ConsoleKey.D1:
+                                    CheckFunction<Motherboard> checkMoth = unit.AddMotherboardBool;
+                                    Choose(unit, Motherboard.Items, "motherboard", checkMoth);
+                                    break;
+                                case ConsoleKey.D2:
+                                    CheckFunction<PowerSupply> checkPow = unit.AddPowerSupplyBool;
+                                    Choose(unit, PowerSupply.Items, "power", checkPow);
+                                    break;
+                                case ConsoleKey.D3:
+                                    if (MotherboardIsChosen(unit))
+                                    {
+                                        CheckFunction<Processor> checkProc =
+                                            unit.MotherboardAdded.AddProcessorsToMotherboard;
+                                        Choose(unit, Processor.Items, "processor", checkProc);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("You should choose motherboard!");
+                                    }
+                                    break;
+                                case ConsoleKey.D4:
+                                    if (MotherboardIsChosen(unit))
+                                    {
+                                        ChooseMemoryCard(unit);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("You should choose motherboard!");
+                                    }
+
+                                    break;
+                                case ConsoleKey.C:
+                                    bool can = CanGetConclusion(unit);
+                                    if (can)
+                                    {
+                                        loopmenu = false;
+                                        Conclusion();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("You should finish choosing!");
+                                        loopmenu = true;
+                                    }
+
+                                    break;
+                                default:
+                                    loopmenu = true;
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
@@ -54,7 +109,7 @@ namespace Lab1
 
         private static void Choose<T>(SystemUnitCase unitCase, List<T> list, string choice, CheckFunction<T> function)
         {
-            Console.WriteLine($"Please choose {choice}:\n");
+            Console.WriteLine($"\nPlease choose {choice}:\n");
             foreach (var s in list)
             {
                 Console.WriteLine(function(s)
@@ -165,7 +220,7 @@ namespace Lab1
                               $"PowerSupply: {unit.PowerSupply}, it {CheckString(unit.AddPowerSupplyBool(unit.PowerSupply))} the unit case;\n" +
                               $"Motherboard: {unit.MotherboardAdded}, it {CheckString(unit.MotherboardTypesSupported.Contains(unit.MotherboardAdded.Type))} the motherboard;\n" +
                               $"Processor: {unit.MotherboardAdded.Processor}, it {CheckString(unit.MotherboardAdded.AddProcessorsToMotherboard(unit.MotherboardAdded.Processor))} the motherboard;\n");
-           
+
             Console.WriteLine($"Memory card{(unit.MotherboardAdded.MemoryCards.Count == 1 ? "" : "s")}:");
             foreach (var s in unit.MotherboardAdded.MemoryCards)
             {
@@ -177,6 +232,51 @@ namespace Lab1
             res.Add(power);
             Console.WriteLine($"battery is {(power ? "" : "not")} enough to power all the elements");
             Console.WriteLine($"\nYou can{(res.Contains(false) ? " not" : "")} form a set out of these items");
+        }
+
+        private static bool CanGetConclusion(SystemUnitCase unitCase)
+        {
+            if (unitCase == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (unitCase.MotherboardAdded == null)
+                {
+                    Console.WriteLine("\nChoose motherboard!");
+                }
+                else
+                {
+                    if (unitCase.MotherboardAdded.Processor == null)
+                    {
+                        Console.WriteLine("\nChoose processor!");
+                        return false;
+                    }
+
+                    if (unitCase.MotherboardAdded.MemoryCards == null ||
+                        unitCase.MotherboardAdded.MemoryCards.Count == 0)
+                    {
+                        Console.WriteLine("\nChoose memory card!");
+                        return false;
+                    }
+                }
+
+                if (unitCase.PowerSupply == null)
+                {
+                    Console.WriteLine("\nChoose power supply!");
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
+        private static bool MotherboardIsChosen(SystemUnitCase unitCase)
+        {
+            return (unitCase.MotherboardAdded != null);
         }
 
         private static string CheckString(bool b)
